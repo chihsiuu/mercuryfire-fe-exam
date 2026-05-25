@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import apiClient from '../utils/api'
+import { RoleLevel, AccountStatus } from '../types'
 
 export interface Account {
   id: string
   name: string
   email: string
-  roleLevel: string
-  status: string
+  roleLevel: RoleLevel
+  status: AccountStatus
   createdAt: string
 }
 
@@ -18,11 +19,11 @@ export const useAccountStore = defineStore('account', () => {
   const searchQuery = ref('')
 
   const activeCount = computed(
-    () => accounts.value.filter((a) => a.status === 'ON').length,
+    () => accounts.value.filter((a) => a.status === AccountStatus.ON).length,
   )
 
   const inactiveCount = computed(
-    () => accounts.value.filter((a) => a.status === 'OFF').length,
+    () => accounts.value.filter((a) => a.status === AccountStatus.OFF).length,
   )
 
   const filteredAccounts = computed(() => {

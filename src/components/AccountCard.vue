@@ -19,12 +19,12 @@
                     <span
                         :class="[
                             'inline-block px-2 py-1 rounded-full text-white text-sm mt-1 font-medium',
-                            account.status === 'ON'
+                            account.status === AccountStatus.ON
                                 ? 'bg-green-500'
                                 : 'bg-gray-400',
                         ]"
                     >
-                        {{ account.status === "ON" ? "啟用" : "停用" }}
+                        {{ account.status === AccountStatus.ON ? "啟用" : "停用" }}
                     </span>
                 </div>
             </div>
@@ -38,9 +38,7 @@
             </div>
             <div class="flex items-center gap-2 text-gray-600">
                 <img src="../assets/user-icon.svg" alt="role" class="w-4 h-4" style="opacity: 0.7">
-                <span class="text-sm">{{
-                    account.roleLevel === "ADMIN" ? "管理員" : "用戶"
-                }}</span>
+                <span class="text-sm">{{ getRoleLabel(account.roleLevel) }}</span>
             </div>
             <div class="flex items-center gap-2 text-gray-600">
                 <img src="../assets/calendar-icon.svg" alt="date" class="w-4 h-4" style="opacity: 0.7">
@@ -59,15 +57,8 @@
 
 <script setup lang="ts">
 import ActionButtons from './ActionButtons.vue'
-
-interface Account {
-    id: string;
-    name: string;
-    email: string;
-    roleLevel: string;
-    status: string;
-    createdAt: string;
-}
+import { Account } from '../stores/account'
+import { RoleLevel, AccountStatus } from '../types'
 
 interface Props {
     account: Account
@@ -91,4 +82,14 @@ const formatDate = (dateString: string) => {
         day: "2-digit",
     });
 };
+
+const getRoleLabel = (role: RoleLevel): string => {
+  const labels: Record<RoleLevel, string> = {
+    [RoleLevel.ADMIN]: '管理員',
+    [RoleLevel.EDITOR]: '編輯',
+    [RoleLevel.USER]: '用戶',
+    [RoleLevel.CLIENT]: '客戶',
+  }
+  return labels[role] || role
+}
 </script>

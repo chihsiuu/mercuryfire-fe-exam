@@ -58,8 +58,9 @@
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               >
                 <option value="">請選擇角色</option>
-                <option value="ADMIN">管理員</option>
-                <option value="USER">用戶</option>
+                <option v-for="role in roleLevels" :key="role" :value="role">
+                  {{ role }}
+                </option>
               </select>
             </div>
 
@@ -75,8 +76,9 @@
                 class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               >
                 <option value="">請選擇狀態</option>
-                <option value="ON">啟用</option>
-                <option value="OFF">停用</option>
+                <option v-for="status in accountStatuses" :key="status" :value="status">
+                  {{ status === AccountStatus.ON ? '啟用' : '停用' }}
+                </option>
               </select>
             </div>
 
@@ -112,6 +114,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import apiClient from '../utils/api'
+import { RoleLevel, AccountStatus, AccountFormDto } from '../types'
 
 interface Props {
   isOpen: boolean
@@ -125,12 +128,15 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const form = ref({
+const form = ref<Partial<AccountFormDto>>({
   name: '',
   email: '',
   roleLevel: '',
   status: '',
 })
+
+const roleLevels = Object.values(RoleLevel)
+const accountStatuses = Object.values(AccountStatus)
 
 const loading = ref(false)
 const error = ref('')
